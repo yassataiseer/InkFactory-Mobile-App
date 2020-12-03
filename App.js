@@ -1,46 +1,60 @@
-import React from 'react';
-import { StyleSheet, Text, View, TextInput, TouchableOpacity} from 'react-native';
+import React, { Component } from 'react';
 
-//export default class App extends React.Component {
-function App(){
-//handleClick() {
-  //  let username1=this.state.username;
-   // return console.log(username1);
-  //};
-  state={
-    email:"",
-    password:""
-  }
-  //render(){
+import { StyleSheet, Text, View, TextInput, TouchableOpacity,ToastAndroid,Button, constructor, Alert, alert} from 'react-native';
+
+
+export default class App extends Component {
+  constructor(props) {
+    super(props);
     
+    this.state = {
+      username: '',
+      password: '',
+    };
+  }
+  
+  onLogin() {
+    const { username, password } = this.state;
+
+    Alert.alert('Credentials', `${username} + ${password}`);
+  }
+
+  render() {
     return (
       <View style={styles.container}>
         <Text style={styles.logo}>InkFactory</Text>
         <View style={styles.inputView} >
-          <TextInput  
-            style={styles.inputText}
-            placeholder="Email..." 
-            placeholderTextColor="#003f5c"
-            onChangeText={text => this.setState({email:text})}/>
+        <TextInput
+          value={this.state.username}
+          onChangeText={(username) => this.setState({ username })}
+          style={styles.inputText}
+          placeholder="Email..." 
+          placeholderTextColor="#003f5c"
+        />
         </View>
         <View style={styles.inputView} >
-          <TextInput  
-            secureTextEntry
-            style={styles.inputText}
-            placeholder="Password..." 
-            placeholderTextColor="#003f5c"
-            onChangeText={text => this.setState({password:text})}/>
-        </View>
 
-        <TouchableOpacity style={styles.loginBtn} onClick={this.handleClick}>
-          <Text style={styles.loginText}>LOGIN</Text>
-        </TouchableOpacity>
+        <TextInput
+          value={this.state.password}
+          onChangeText={(password) => this.setState({ password })}
+          placeholder={'Password'}
+          secureTextEntry={true}
+          style={styles.inputText}
+          placeholderTextColor="#003f5c"
+
+        />
+        </View>
+        
+        <Button
+          title={'Login'}
+          style={styles.input}
+          onPress={this.onLogin.bind(this)}
+        />
       </View>
     );
-  //}
-
+  }
 }
-export default App;
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
