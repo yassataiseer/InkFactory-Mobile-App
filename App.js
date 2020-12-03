@@ -10,13 +10,51 @@ export default class App extends Component {
     this.state = {
       username: '',
       password: '',
+      nameList: []
     };
   }
   
   onLogin() {
     const { username, password } = this.state;
 
-    Alert.alert('Credentials', `${username} + ${password}`);
+
+    //const a = fetch('http://inkfactory.pythonanywhere.com/Validate_Employee/taiseer142@hotmail.com+56Operahouse')
+    const url='http://inkfactory.pythonanywhere.com/Validate_Employee/'+username+"+"+password;
+    //const b = a.json()
+
+    function help (link) {
+      fetch(link).then(
+        function(data){return data.json()}
+      )
+      .then(
+        function(json){
+          if (json==true){
+            var a ="";
+            a = json.toString()
+            console.log(a)
+            if (a =="true"){
+              ToastAndroid.showWithGravity(
+                "Your Are In",
+                ToastAndroid.LONG,
+                ToastAndroid.BOTTOM,
+                25,
+                50
+              );            }
+          }
+          else{
+            ToastAndroid.showWithGravity(
+              "Invalid Creds.",
+              ToastAndroid.LONG,
+              ToastAndroid.BOTTOM,
+              25,
+              50
+            );
+          }
+        }
+      )
+      }
+      help(url)
+      
   }
 
   render() {
