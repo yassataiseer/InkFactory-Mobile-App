@@ -1,23 +1,25 @@
 import React, { Component } from 'react';
-
 import { StyleSheet, Text, View, TextInput, TouchableOpacity,ToastAndroid,Button, constructor, Alert, alert} from 'react-native';
-
-
-export default class App extends Component {
+//import { StackNavigator } from 'react-navigation';
+import { createAppContainer } from 'react-navigation';  
+import {
+   createStackNavigator,
+  StackNavigator,
+}   from 'react-navigation-stack';
+import { useTheme } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
+class App extends Component {
   constructor(props) {
     super(props);
-    
+    //this.home_func = this.home_func.bind(this);
     this.state = {
       username: '',
       password: '',
       nameList: []
     };
   }
-  
   onLogin() {
     const { username, password } = this.state;
-
-
     //const a = fetch('http://inkfactory.pythonanywhere.com/Validate_Employee/taiseer142@hotmail.com+56Operahouse')
     const url='http://inkfactory.pythonanywhere.com/Validate_Employee/'+username+"+"+password;
     //const b = a.json()
@@ -31,15 +33,10 @@ export default class App extends Component {
           if (json==true){
             var a ="";
             a = json.toString()
-            console.log(a)
             if (a =="true"){
-              ToastAndroid.showWithGravity(
-                "Your Are In",
-                ToastAndroid.LONG,
-                ToastAndroid.BOTTOM,
-                25,
-                50
-              );            }
+              //home_func("Second")
+              return <Employees /> ;      
+            }
           }
           else{
             ToastAndroid.showWithGravity(
@@ -48,14 +45,9 @@ export default class App extends Component {
               ToastAndroid.BOTTOM,
               25,
               50
-            );
-          }
-        }
-      )
-      }
-      help(url)
-      
-  }
+            );}})}
+      help(url)   
+    }
 
   render() {
     return (
@@ -86,12 +78,63 @@ export default class App extends Component {
         <Button
           title={'Login'}
           style={styles.input}
-          onPress={this.onLogin.bind(this)}
+          //onPress={this.onLogin.bind(this)}
+          onPress={() => 
+          
+          this.props.navigation.navigate('Second')}
         />
       </View>
     );
   }
 }
+
+class Employees extends Component
+{
+  static navigationOptions =
+  {
+     title: 'Employees',
+  };
+
+  render()
+  {
+     return(
+        <View style = { styles.loginText }>
+           <Text style = { styles.loginText }> This is the Employees Page! </Text>
+
+        </View>
+     );
+  }
+}
+const Project = createStackNavigator (
+  {
+   First: {screen:App },
+   
+   Second:{screen:Employees}
+  },
+  {
+    
+    initialRouteParams: 'App',
+    headerMode: 'none'
+  }
+ );
+//var navigation = useNavigation();
+
+ home_func=(area)=>{
+   console.log("JJJJJJ");
+   console.log(area);
+   useNavigation.navigate(area)
+ }
+  const AppContainer = createAppContainer(Project);  
+  export default class App1 extends React.Component {  
+      render() {  
+          return <AppContainer />;  
+      }  
+  }  
+
+
+
+
+
 
 const styles = StyleSheet.create({
   container: {
