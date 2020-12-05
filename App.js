@@ -1,13 +1,20 @@
 import React, { Component } from 'react';
 import { StyleSheet, Text, View, TextInput, TouchableOpacity,ToastAndroid,Button, constructor, Alert, alert} from 'react-native';
 //import { StackNavigator } from 'react-navigation';
-import { createAppContainer } from 'react-navigation';  
+import {createBottomTabNavigator,  createAppContainer } from 'react-navigation';  
+import { createMaterialBottomTabNavigator } from 'react-navigation-material-bottom-tabs';  
+import Icon from 'react-native-vector-icons/Ionicons';  
+
 import {
    createStackNavigator,
   StackNavigator,
 }   from 'react-navigation-stack';
 import { useTheme } from '@react-navigation/native';
 import { useNavigation } from '@react-navigation/native';
+import { not } from 'react-native-reanimated';
+var passkey = "";
+//const Tab = createBottomTabNavigator();
+
 class App extends Component {
   constructor(props) {
     super(props);
@@ -30,22 +37,16 @@ class App extends Component {
       )
       .then(
         function(json){
-          if (json==true){
-            var a ="";
-            a = json.toString()
-            if (a =="true"){
-              //home_func("Second")
-              return <Employees /> ;      
-            }
+
+          if (json==undefined){
+            console.log(password);
+            passkey ="fail";
+            console.log(passkey)
           }
-          else{
-            ToastAndroid.showWithGravity(
-              "Invalid Creds.",
-              ToastAndroid.LONG,
-              ToastAndroid.BOTTOM,
-              25,
-              50
-            );}})}
+          else if (json==true){
+            passkey="pass";
+            console.log(passkey)
+          }})}
       help(url)   
     }
 
@@ -80,8 +81,19 @@ class App extends Component {
           style={styles.input}
           //onPress={this.onLogin.bind(this)}
           onPress={() => 
-          
-          this.props.navigation.navigate('Second')}
+          {
+            console.log("status");
+            console.log(passkey);
+            this.onLogin()
+            if (passkey=="fail"){
+            console.log("HHHH");
+          }
+          else if(passkey=="pass"){
+            console.log("logging you in :)");
+            this.props.navigation.navigate('Second')
+
+          }
+          }}
         />
       </View>
     );
@@ -100,16 +112,72 @@ class Employees extends Component
      return(
         <View style = { styles.loginText }>
            <Text style = { styles.loginText }> This is the Employees Page! </Text>
+           <Button style={styles.loginBtn} status='success' title={"clients"} onPress onPress={() =>{this.props.navigation.navigate('Clients')}}>
+           </Button>
+        </View>
+        
+     );
+  }
+}
+class clients extends Component
+{
+  static navigationOptions =
+  {
+     title: 'Clients',
+  };
+
+  render()
+  {
+     return(
+        <View style = { styles.loginText }>
+           <Text style = { styles.loginText }> This is the Clients Page! </Text>
 
         </View>
      );
   }
 }
+
+class Order_builder extends Component
+{
+  static navigationOptions =
+  {
+     title: 'Order=Builder',
+  };
+
+  render()
+  {
+     return(
+        <View style = { styles.loginText }>
+           <Text style = { styles.loginText }> This is the order builder Page! </Text>
+
+        </View>
+     );
+  }
+}
+
+const TabNavigator = createBottomTabNavigator(
+{
+  Home:{screen:App,
+    navigationOptions:{  
+      tabBarLabel:'Employees',  
+      tabBarIcon: ({ tintColor }) => (  
+          <View>  
+              <Icon style={[{color: tintColor}]} size={25} name={'ios-home'}/>  
+          </View>),  
+      activeColor: '#f60c0d',  
+      inactiveColor: '#f65a22',  
+      barStyle: { backgroundColor: '#f69b31' },  
+  }}});
+
+
+
 const Project = createStackNavigator (
   {
    First: {screen:App },
    
-   Second:{screen:Employees}
+   Second:{screen:Employees},
+
+   Clients:{screen:clients}
   },
   {
     
@@ -127,6 +195,7 @@ const Project = createStackNavigator (
   const AppContainer = createAppContainer(Project);  
   export default class App1 extends React.Component {  
       render() {  
+        
           return <AppContainer />;  
       }  
   }  
@@ -173,8 +242,10 @@ const styles = StyleSheet.create({
     marginTop:40,
     marginBottom:10
   },
+
   loginText:{
     color:"black"
-  }
+  },
+
   
 });
